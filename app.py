@@ -105,4 +105,4 @@ st.markdown("---")
 if TRAIN_PATH.exists():
     train_df = pd.read_csv(TRAIN_PATH)
     st.subheader("Dataset preview")
-    st.dataframe(train_df.head(10), use_container_width=True)
+    st.dataframe(train_df.head(10), width="stretch")
