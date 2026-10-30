@@ -59,18 +59,6 @@ st.caption("Predict the support category for a customer message using the traine
 
 model = load_or_train_model()
 
-with st.sidebar:
-    st.header("Model info")
-    st.write("Model type: Logistic Regression + TF-IDF")
-    st.write("Saved model path:", MODEL_PATH)
-
-    if TEST_PATH.exists():
-        test_df = pd.read_csv(TEST_PATH)
-        test_text = test_df["text"].apply(clean_text)
-        test_label = test_df["category"]
-        score = model.score(test_text, test_label)
-        st.metric("Test accuracy", f"{score:.2%}")
-
 text_input = st.text_area(
     "Enter a customer support message",
     height=150,
