@@ -55,19 +55,21 @@ def load_or_train_model():
 
 st.set_page_config(page_title="Customer Support Classifier", page_icon="💬", layout="wide")
 st.title("Customer Support Text Classifier")
-st.caption("Turn a customer message into a support category.")
+st.caption("Predict the support category for a customer message using the trained model.")
 
 model = load_or_train_model()
 
-st.subheader("Try a message")
-st.caption("Enter the message you received from a customer.")
-text_input = st.text_area(
-    "Customer message",
-    height=140,
-    placeholder="For example: I still haven't received my bank card after two weeks."
-)
+with st.container(border=True):
+    st.subheader("Try a message")
+    text_input = st.text_area(
+        "Enter a customer support message",
+        height=150,
+        placeholder="Example: I still haven't received my bank card after two weeks."
+    )
 
-if st.button("Predict category", type="primary"):
+    predict_clicked = st.button("Predict category", type="primary")
+
+if predict_clicked:
     if not text_input.strip():
         st.warning("Please enter a message first.")
     else:
