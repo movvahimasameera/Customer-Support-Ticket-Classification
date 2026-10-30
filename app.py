@@ -55,17 +55,19 @@ def load_or_train_model():
 
 st.set_page_config(page_title="Customer Support Classifier", page_icon="💬", layout="wide")
 st.title("Customer Support Text Classifier")
-st.caption("Predict the support category for a customer message using the trained model.")
+st.caption("Turn a customer message into a support category.")
 
 model = load_or_train_model()
 
+st.subheader("Try a message")
+st.caption("Enter the message you received from a customer.")
 text_input = st.text_area(
-    "Enter a customer support message",
-    height=150,
-    placeholder="Example: I still haven't received my bank card after two weeks."
+    "Customer message",
+    height=140,
+    placeholder="For example: I still haven't received my bank card after two weeks."
 )
 
-if st.button("Predict category"):
+if st.button("Predict category", type="primary"):
     if not text_input.strip():
         st.warning("Please enter a message first.")
     else:
@@ -75,8 +77,10 @@ if st.button("Predict category"):
         class_index = list(model.classes_).index(pred)
         confidence = probabilities[class_index] * 100
 
-        st.success(f"Predicted category: {pred}")
-        st.write(f"Confidence: {confidence:.2f}%")
+        st.subheader("Prediction")
+        category_col, confidence_col = st.columns(2)
+        category_col.metric("Support category", pred)
+        confidence_col.metric("Confidence", f"{confidence:.2f}%")
 
         top_classes = sorted(
             zip(model.classes_, probabilities),
@@ -84,13 +88,19 @@ if st.button("Predict category"):
             reverse=True,
         )[:5]
 
-        st.subheader("Top predicted classes")
-        for label, prob in top_classes:
-            st.write(f"- {label}: {prob * 100:.2f}%")
+        with st.expander("See other likely categories"):
+            st.dataframe(
+                pd.DataFrame({
+                    "Category": [label for label, _ in top_classes],
+                    "Probability": [f"{prob:.2%}" for _, prob in top_classes],
+                }),
+                hide_index=True,
+                width="stretch",
+            )
 
 st.markdown("---")
 
 if TRAIN_PATH.exists():
     train_df = pd.read_csv(TRAIN_PATH)
-    st.subheader("Dataset preview")
-    st.dataframe(train_df.head(10), width="stretch")
+    with st.expander("Preview training examples"):
+        st.dataframe(train_df.head(10), width="stretch")
