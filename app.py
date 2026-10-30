@@ -59,7 +59,7 @@ st.markdown(
     <style>
     .block-container {
         max-width: 1200px;
-        padding-top: 2rem;
+        padding-top: 3.5rem;
         padding-bottom: 4rem;
     }
 
@@ -100,7 +100,7 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
-st.write("**CUSTOMER CARE · SMART CLASSIFICATION**")
+st.caption("CUSTOMER CARE · SMART CLASSIFICATION")
 st.title("💬 Support, sorted.")
 st.caption("Turn a customer message into the right support category in seconds.")
 
