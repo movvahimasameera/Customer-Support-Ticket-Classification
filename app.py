@@ -58,36 +58,47 @@ st.markdown(
     """
     <style>
     .block-container {
-        max-width: 1100px;
-        padding-top: 2.5rem;
-        padding-bottom: 3rem;
+        max-width: 1200px;
+        padding-top: 2rem;
+        padding-bottom: 4rem;
     }
 
     h1 {
         font-weight: 700;
-        letter-spacing: -0.035em;
+        letter-spacing: -0.04em;
+        margin-bottom: 0.25rem;
+    }
+
+    .eyebrow {
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        opacity: 0.7;
+        text-transform: uppercase;
+        margin-bottom: 0.5rem;
     }
 
     [data-testid="stTextArea"] textarea {
         border-radius: 12px;
         line-height: 1.6;
+        min-height: 190px;
     }
 
     [data-testid="stVerticalBlockBorderWrapper"] {
-        border-radius: 14px;
-        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+        border-radius: 16px;
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
     }
 
     [data-testid="stMetric"] {
         border: 1px solid rgba(128, 128, 128, 0.25);
-        border-radius: 12px;
-        padding: 1rem;
+        border-radius: 14px;
+        padding: 0.8rem 1rem;
     }
 
     .stButton > button {
-        border-radius: 10px;
+        border-radius: 11px;
         font-weight: 600;
-        padding: 0.55rem 1.1rem;
+        min-height: 2.8rem;
         transition: transform 120ms ease;
     }
 
@@ -98,20 +109,47 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
-st.title("💬 Customer Support Classifier")
-st.caption("Turn a customer message into a clear support category.")
+st.markdown('<div class="eyebrow">CUSTOMER CARE · SMART CLASSIFICATION</div>', unsafe_allow_html=True)
+st.title("💬 Support, sorted.")
+st.caption("Turn a customer message into the right support category in seconds.")
 
 model = load_or_train_model()
 
-with st.container(border=True):
-    st.subheader("Try a message")
-    text_input = st.text_area(
-        "Enter a customer support message",
-        height=150,
-        placeholder="Example: I still haven't received my bank card after two weeks."
-    )
+overview_cols = st.columns(3)
+overview_cols[0].metric("Support categories", len(model.classes_))
+overview_cols[1].metric("Input needed", "One message")
+overview_cols[2].metric("Results", "Top matches")
 
-    predict_clicked = st.button("Predict category", type="primary")
+st.write("")
+input_col, guide_col = st.columns([1.7, 1], gap="large")
+
+with input_col:
+    with st.container(border=True):
+        st.subheader("Classify a message")
+        st.caption("Paste or type the message you received from a customer.")
+        text_input = st.text_area(
+            "Customer message",
+            height=180,
+            placeholder="Example: I still haven't received my bank card after two weeks."
+        )
+        predict_clicked = st.button("✨  Predict category", type="primary", width="stretch")
+
+with guide_col:
+    with st.container(border=True):
+        st.subheader("Get a better match")
+        st.caption("A little context helps the classifier find the right team.")
+        st.markdown(
+            """
+            **Include details like**
+            - What product or service is involved
+            - What happened and when
+            - What help the customer needs
+
+            **Example**
+
+            > My card has not arrived after two weeks. Can you check the delivery?
+            """
+        )
 
 if predict_clicked:
     if not text_input.strip():
@@ -130,7 +168,8 @@ if predict_clicked:
         )[:5]
 
         with st.container(border=True):
-            st.subheader("Prediction")
+            st.subheader("Your prediction")
+            st.caption("The closest matching support category and model confidence.")
             category_col, confidence_col = st.columns(2)
             category_col.metric("Support category", pred)
             confidence_col.metric("Confidence", f"{confidence:.2f}%")
@@ -144,5 +183,5 @@ st.divider()
 
 if TRAIN_PATH.exists():
     train_df = pd.read_csv(TRAIN_PATH)
-    with st.expander("Preview training examples"):
+    with st.expander("Explore sample training messages"):
         st.dataframe(train_df.head(10), width="stretch")
