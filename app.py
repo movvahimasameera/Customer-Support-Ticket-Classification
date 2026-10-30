@@ -58,13 +58,19 @@ st.markdown(
     """
     <style>
     .block-container {
+        max-width: 1100px;
         padding-top: 2.5rem;
         padding-bottom: 3rem;
     }
 
     h1 {
-        font-weight: 750;
+        font-weight: 700;
         letter-spacing: -0.035em;
+    }
+
+    [data-testid="stTextArea"] textarea {
+        border-radius: 12px;
+        line-height: 1.6;
     }
 
     [data-testid="stVerticalBlockBorderWrapper"] {
@@ -92,8 +98,8 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
-st.title("Customer Support Text Classifier")
-st.caption("Predict the support category for a customer message using the trained model.")
+st.title("💬 Customer Support Classifier")
+st.caption("Turn a customer message into a clear support category.")
 
 model = load_or_train_model()
 
