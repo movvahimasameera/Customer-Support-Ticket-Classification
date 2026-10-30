@@ -69,16 +69,6 @@ st.markdown(
         margin-bottom: 0.25rem;
     }
 
-    .eyebrow {
-        font-size: 0.75rem;
-        font-weight: 700;
-        letter-spacing: 0.12em;
-        opacity: 0.7;
-        text-transform: uppercase;
-        margin-top: 1.25rem;
-        margin-bottom: 0.5rem;
-    }
-
     [data-testid="stTextArea"] textarea {
         border-radius: 12px;
         line-height: 1.6;
@@ -110,7 +100,7 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
-st.markdown('<div class="eyebrow">CUSTOMER CARE · SMART CLASSIFICATION</div>', unsafe_allow_html=True)
+st.write("**CUSTOMER CARE · SMART CLASSIFICATION**")
 st.title("💬 Support, sorted.")
 st.caption("Turn a customer message into the right support category in seconds.")
 
