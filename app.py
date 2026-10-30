@@ -54,6 +54,44 @@ def load_or_train_model():
 
 
 st.set_page_config(page_title="Customer Support Classifier", page_icon="💬", layout="wide")
+st.markdown(
+    """
+    <style>
+    .block-container {
+        padding-top: 2.5rem;
+        padding-bottom: 3rem;
+    }
+
+    h1 {
+        font-weight: 750;
+        letter-spacing: -0.035em;
+    }
+
+    [data-testid="stVerticalBlockBorderWrapper"] {
+        border-radius: 14px;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+    }
+
+    [data-testid="stMetric"] {
+        border: 1px solid rgba(128, 128, 128, 0.25);
+        border-radius: 12px;
+        padding: 1rem;
+    }
+
+    .stButton > button {
+        border-radius: 10px;
+        font-weight: 600;
+        padding: 0.55rem 1.1rem;
+        transition: transform 120ms ease;
+    }
+
+    .stButton > button:hover {
+        transform: translateY(-1px);
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 st.title("Customer Support Text Classifier")
 st.caption("Predict the support category for a customer message using the trained model.")
 
@@ -79,26 +117,27 @@ if predict_clicked:
         class_index = list(model.classes_).index(pred)
         confidence = probabilities[class_index] * 100
 
-        st.subheader("Prediction")
-        category_col, confidence_col = st.columns(2)
-        category_col.metric("Support category", pred)
-        confidence_col.metric("Confidence", f"{confidence:.2f}%")
-
         top_classes = sorted(
             zip(model.classes_, probabilities),
             key=lambda x: x[1],
             reverse=True,
         )[:5]
 
-        with st.expander("See other likely categories"):
-            st.dataframe(
-                pd.DataFrame({
-                    "Category": [label for label, _ in top_classes],
-                    "Probability": [f"{prob:.2%}" for _, prob in top_classes],
-                }),
-                hide_index=True,
-                width="stretch",
-            )
+        with st.container(border=True):
+            st.subheader("Prediction")
+            category_col, confidence_col = st.columns(2)
+            category_col.metric("Support category", pred)
+            confidence_col.metric("Confidence", f"{confidence:.2f}%")
+
+            with st.expander("See other likely categories"):
+                st.dataframe(
+                    pd.DataFrame({
+                        "Category": [label for label, _ in top_classes],
+                        "Probability": [f"{prob:.2%}" for _, prob in top_classes],
+                    }),
+                    hide_index=True,
+                    width="stretch",
+                )
 
 st.markdown("---")
 
