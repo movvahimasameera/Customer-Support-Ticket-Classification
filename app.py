@@ -135,17 +135,12 @@ if predict_clicked:
             category_col.metric("Support category", pred)
             confidence_col.metric("Confidence", f"{confidence:.2f}%")
 
-            with st.expander("See other likely categories"):
-                st.dataframe(
-                    pd.DataFrame({
-                        "Category": [label for label, _ in top_classes],
-                        "Probability": [f"{prob:.2%}" for _, prob in top_classes],
-                    }),
-                    hide_index=True,
-                    width="stretch",
-                )
+            with st.expander("Explore confidence by category"):
+                for label, probability in top_classes:
+                    st.caption(f"{label} · {probability:.1%}")
+                    st.progress(float(probability))
 
-st.markdown("---")
+st.divider()
 
 if TRAIN_PATH.exists():
     train_df = pd.read_csv(TRAIN_PATH)
