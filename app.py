@@ -75,6 +75,7 @@ st.markdown(
         letter-spacing: 0.12em;
         opacity: 0.7;
         text-transform: uppercase;
+        margin-top: 1.25rem;
         margin-bottom: 0.5rem;
     }
 
